@@ -1,19 +1,38 @@
-void main(){
+void main() {
+//
+  var rahul = Account("Rahul Khatri", 10000);
+  var sanjay = Account("Sanjay");
+  sanjay.withDrawAmount(300, description: "Swiggy");
+  sanjay.withDrawAmount(502, description: "Ola");
 
-// 
-var rahul = Account("Rahul Khatri", 10000);
-var sanjay = Account("Sanjay");
 
-List<Transaction> txn = [];
+  var savings = SavingsAccount("Rahul Khatri", 1000);
+  savings.printAccount();
+  savings.withDrawAmount(200);
+  savings.withDrawAmount(200);
+  savings.withDrawAmount(200);
+
+  List<Transaction> txn = [];
 // rahul.desposit(5000);
 // rahul.withDraw(2000);
 // print("aNo:${rahul._balance}, name:${rahul.accountHolderName}, balance:${rahul._balance}");
 // print(rahul.phrase);
 // rahul.depositAmount(6000, description: "Salary");
 // rahul.withDrawAmount(3000, description: "Swiggy");
-rahul.printAccount();
-sanjay.printAccount();
+  rahul.printAccount();
+  sanjay.printAccount();
+}
 
+class SavingsAccount extends Account {
+  SavingsAccount(String accountHolderName, double balance)
+      : super(accountHolderName, balance);
+
+  @override
+  double withDrawAmount(double amount, {String description = ""}) {
+    if (_balance - amount < 500) throw Exception("Reached Min Balance Limit");
+
+    return super.withDrawAmount(amount, description: description);
+  }
 }
 
 class Transaction {
@@ -25,12 +44,12 @@ class Transaction {
 
   @override
   String toString() {
-   return "$amount, $description, $drCr"; 
-   }
+    return "$amount, $description, $drCr";
+  }
 }
 
-class Account{
-  static int finalAccountNumber= 11000;
+class Account {
+  static int finalAccountNumber = 11000;
   late final int accountNumber;
   final String accountHolderName;
   double _balance;
@@ -44,8 +63,8 @@ class Account{
   // void set phrase(String newPhrase) => _phrase = newPhrase;
 
   //   setter with validation
-  void set phrase(String newPhrase){
-    if(newPhrase.trim() != ""){
+  void set phrase(String newPhrase) {
+    if (newPhrase.trim() != "") {
       _phrase = newPhrase;
     }
   }
@@ -54,9 +73,9 @@ class Account{
   double get balance => _balance;
 
 //  init mathod, dtor, ctor
-  Account(this.accountHolderName, [this._balance = 1000.00]){
-    accountNumber = finalAccountNumber+1;
-    finalAccountNumber ++;
+  Account(this.accountHolderName, [this._balance = 1000.00]) {
+    accountNumber = finalAccountNumber + 1;
+    finalAccountNumber++;
   }
 
 //  method with lamda
@@ -65,22 +84,20 @@ class Account{
   double withDraw(double amount) => _balance -= amount;
 
 //  method store data in list : deposit money txn stored
-  double depositAmount(double amount, {required String description}){
+  double depositAmount(double amount, {required String description}) {
     _txn.add(Transaction(amount, description, "Cr"));
     return _balance += amount;
   }
 
 //  method store data in list : withdraw money transaction stored
-  double withDrawAmount(double amount, {required String description}){
+  double withDrawAmount(double amount, {required String description}) {
     _txn.add(Transaction(amount, description, "DR"));
     return _balance -= amount;
   }
 
 //  priting txn history like Passbook.
-  void printAccount(){
+  void printAccount() {
     print("$accountNumber: $accountHolderName, balance $_balance");
-    for(var it in _txn)
-    print(it);
+    for (var it in _txn) print(it);
   }
 }
-
